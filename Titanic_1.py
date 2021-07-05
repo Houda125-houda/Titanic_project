@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Fri Jul  2 12:54:37 2021
 
-@author: LENOVO
-"""
 
 import os
 import pandas as pd  #manipulation data
