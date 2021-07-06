@@ -64,6 +64,11 @@ ax = sns.boxplot(data=data_train_brut, orient="h", palette="Set2")
 ax1 = sns.boxplot(data=data_train_brut, orient="h", palette="Set2")
 
 
+#############################################
+#            Data preprocessing             #
+#############################################
+
+
 
 
 
