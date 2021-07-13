@@ -95,9 +95,6 @@ data_train_brut.drop(['Cabin'], axis = 1, inplace = True)
 # remove the rows  wwith missing values and columns in dataset'jeu de données'
 data_train_brut.dropna(subset = ['Embarked','Age'], inplace = True)
 data_train_brut.shape
-# examine type of data
-data_train_brut.dtypes
-
 # to visualize relationship between two variables where variables can be continuous categorical
 #sns.pairplot(data_train_brut)
 # scatter plot is a type of data display that shows the relationship between two numerical variables each member of data cell gets plotted as a point whose left parenthesis ''' named relationplot' 
@@ -119,14 +116,67 @@ sns.catplot(x = 'Age' , kind= 'box',  data = data_train_brut )
 # boxplot for all variables 
 ax = sns.boxplot(data=data_train_brut, orient="h", palette="Set2")
 ax1 = sns.boxplot(data=data_train_brut, orient="h", palette="Set2")
-
-
-#############################################
-#            Data preprocessing             #
-#############################################
-# Handling Outliers 
-
-
+# examine type of data
+data_train_brut.dtypes
+# Now after checking the type of our data we can use a method in sklearn preprocession called labelencoder
+# which transforms our object data to integers
+from sklearn.preprocessing import LabelEncoder
+# we will create a variable called 'labelencoder' equal to LabelEncoder method or constructor
+labelencoder = LabelEncoder()
+# Encode the sex column
+data_train_brut.iloc[:,2] = labelencoder.fit_transform(data_train_brut.iloc[:,2])
+# Encode the Embarked column
+data_train_brut.iloc[:,7] = labelencoder.fit_transform(data_train_brut.iloc[:,7])
+# Split the data into independent  'X' and dependent 'Y' variables
+X = data_train_brut.iloc[:,1:8].values
+y = data_train_brut.iloc[:,0].values 
+# split the data into 80% training and 20% test
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X,y, test_size = 0.2, random_state = 0)
+# Scale the data 
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.fit_transform(X_test)
+#######################################################
+##     Function with many machinelearning models     ##
+#######################################################
+# Create  a function with many machine learning models
+def models(X_train, y_train): 
+    # Use Logistic Regression 
+    from sklearn.linear_model import LogisticRegression
+    log = LogisticRegression(random_state = 0)
+    log.fit(X_train, y_train)
+    # Use Kneighbors
+    from sklearn.neighbors import KNeighborsClassifier
+    knn= KNeighborsClassifier(n_neighbors = 5, metric = 'minkowski', p= 2)
+    knn.fit(X_train, y_train)
+    # Use SVC
+    from sklearn.svm import SVC
+    svc_rbf = SVC(kernel = 'linear', random_state = 0)
+    svc_rbf.fit(X_train, y_train) # for training 
+    # Use GaussianNB
+    from sklearn.naive_bayes import GaussianNB
+    gauss =  GaussianNB()
+    gauss.fit(X_train, y_train)
+    # Use Decision Tree
+    from sklearn.tree import DecisionTreeClassifier
+    tree = DecisionTreeClassifier(criterion = 'entropy', random_state = 0)
+    tree.fit(X_train, y_train)
+    # Use RandomForestClassifier
+    from sklearn.ensemble import RandomForestClassifier
+    forest = RandomForestClassifier(n_estimators = 10,criterion = 'entropy', random_state = 0)
+    forest.fit(X_train, y_train)
+    # print the training accuracy for each model
+    print('[0] Logistic Regression Training Accuracy:', log.score(X_train, y_train))
+    print('[0] KNeighborsClassifier Training Accuracy:', knn.score(X_train, y_train))
+    print('[0] SVC Training Accuracy:', svc_rbf.score(X_train, y_train))
+    print('[0] GaussianNB Training Accuracy:', gauss.score(X_train, y_train))
+    print('[0] DecisionTreeClassifier Training Accuracy:', tree.score(X_train, y_train))
+    print('[0] RandomForestClassifier Training Accuracy:', forest.score(X_train, y_train))
+    return log, knn, svc_rbf, gauss, tree, forest
+# get and train all the models 
+model = models(X_train, y_train)
 
 
 
