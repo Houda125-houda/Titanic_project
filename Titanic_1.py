@@ -177,6 +177,17 @@ def models(X_train, y_train):
     return log, knn, svc_rbf, gauss, tree, forest
 # get and train all the models 
 model = models(X_train, y_train)
+# Show the confusion matrix and accuracy for all of the models on the test data 
+from sklearn.metrics import confusion_matrix
+for i in range(len(model)):
+    cm = confusion_matrix(y_test, model[i].predict(X_test))
+    # Extract TN ' true negative, false positif, FP, FN, TP 
+    TN, FP, FN, TP = cm.ravel()
+    test_score = (TP + TN) / (TP + TN + FN + FP)
+    print(cm)
+    print('Model[{}] Testing Accuracy = "{}"'.format(i, test_score))
+    print()
+
 
 
 
