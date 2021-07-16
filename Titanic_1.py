@@ -187,9 +187,33 @@ for i in range(len(model)):
     print(cm)
     print('Model[{}] Testing Accuracy = "{}"'.format(i, test_score))
     print()
-
-
-
+# get feature_importance 
+forest = model[5]  # the fifth index of models = the sixth 
+importances = pd.DataFrame({'feature':data_train_brut.iloc[:, 1:8].columns, 'importance': np.round(forest.feature_importances_ , 3)} )
+importances = importances.sort_values('importance', ascending = False).set_index('feature')
+importances
+# Visualize feature_importances_
+importances.plot.bar()
+# print the prediction of the random forest classifier
+pred = model[5].predict(X_test)
+print(pred)
+print()  # space area 
+#print the actual value 
+print(y_test)
+# My_survival 
+my_survival = [[1,0,29,3,3,500,1]]
+# scaling my survival 
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+my_survival_scaled = sc.fit_transform(my_survival)
+#print prediction of my survival using RandomForestClassifier 
+pred = model[5].predict(my_survival_scaled)
+print(pred)
+if pred ==0:
+    print("Oh No ! You didn't make it!")
+else: 
+    print("Great! you survived!")
+    
 
 
 
